@@ -8,6 +8,6 @@
 - Just run the script and let the script do the work for you
 
 How to run script:
- `python file_generator`
+ `python file_generator.py`
 
 **Buy me a coffee : [click here](https://www.paypal.me/RahulPujari "Pay")**
