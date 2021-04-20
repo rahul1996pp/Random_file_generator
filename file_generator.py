@@ -1,10 +1,10 @@
-import os
-import random
-import string
+from os import remove, mkdir
+from random import choice
+from string import ascii_letters
 
 
 def random_text(num):
-    return ''.join(random.choice(string.ascii_letters) for x in range(num))
+    return ''.join(choice(ascii_letters) for x in range(num))
 
 
 def random_file(name, extension):
@@ -12,8 +12,8 @@ def random_file(name, extension):
 
 
 def files_num():
-    extension = random.choice(extensions)
-    name = random_text(random.choice(range(5, 9)))
+    extension = choice(extensions)
+    name = random_text(choice(range(5, 9)))
     file_create_txt(name, extension)
     random_file(name, extension)
 
@@ -27,10 +27,10 @@ def del_created():
     print("[-] Deleting files")
     with open("created_files.txt", 'r')as de:
         for i in de:
-            os.remove('created_files/' + i.strip())
+            remove('created_files/' + i.strip())
     try:
-        os.remove("created_files.txt")
-        os.remove("created_files")
+        remove("created_files.txt")
+        remove("created_files")
     except:
         print("[*] Manually delete the created folder")
 
@@ -38,7 +38,7 @@ def del_created():
 def main():
     credit()
     try:
-        os.mkdir("created_files")
+        mkdir("created_files")
     except:
         pass
     menu = input("""
